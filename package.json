@@ -1,0 +1,24 @@
+{
+  "name": "sarmaci",
+  "version": "1.0.0",
+  "description": "Temat - Gra typu Balatro",
+  "main": "test1.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pawjjs/sarmaci.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/pawjjs/sarmaci/issues"
+  },
+  "homepage": "https://github.com/pawjjs/sarmaci#readme",
+  "dependencies": {
+    "node.js": "^0.0.1-security"
+  }
+}
