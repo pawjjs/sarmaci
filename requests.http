@@ -1,0 +1,21 @@
+GET http://localhost:3000/api/health
+
+GET http://localhost:3000/api/rooms
+
+POST http://localhost:3000/api/rooms
+
+GET http://localhost:3000/api/rooms/E65A72
+
+POST http://localhost:3000/api/rooms/E65A72/join
+Content-Type: application/json
+
+{
+  "nickname": "Gracz 1"
+}
+
+POST http://localhost:3000/api/rooms/E65A72/ready
+Content-Type: application/json
+
+{
+  "playerId": "6507e43912ecf1f5"
+}
