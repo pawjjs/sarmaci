@@ -1,0 +1,119 @@
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Room not found
+    InvalidPlayerId:
+      description: Brak gracza o podanym identyfikatorze w tym pokoju
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Invalid playerId
+  schemas:
+    RoomCode:
+      type: string
+      pattern: ^[a-fA-F0-9]{6}$
+      example: 2CD138
+    RoomStatus:
+      type: string
+      enum:
+      - waiting
+      - in_progress
+      - finished
+      example: waiting
+    Player:
+      type: object
+      required:
+      - id
+      - nickname
+      - isReady
+      - slot
+      properties:
+        id:
+          type: string
+          pattern: ^[a-f0-9]{16}$
+          example: 0123456789abcdef
+        nickname:
+          type: string
+          example: Wojtek
+        isReady:
+          type: boolean
+          example: false
+        slot:
+          type: integer
+          enum:
+          - 1
+          - 2
+          example: 1
+    Room:
+      type: object
+      required:
+      - code
+      - status
+      - maxPlayers
+      - players
+      - createdAt
+      properties:
+        code:
+          $ref: '#/components/schemas/RoomCode'
+        status:
+          $ref: '#/components/schemas/RoomStatus'
+        maxPlayers:
+          type: integer
+          enum:
+          - 2
+        players:
+          type: array
+          maxItems: 2
+          items:
+            $ref: '#/components/schemas/Player'
+        createdAt:
+          type: string
+          format: date-time
+          example: '2026-10-29T11:00:00.000Z'
+    RoomSummary:
+      type: object
+      required:
+      - code
+      - status
+      - playersCount
+      - maxPlayers
+      - createdAt
+      properties:
+        code:
+          $ref: '#/components/schemas/RoomCode'
+        status:
+          $ref: '#/components/schemas/RoomStatus'
+        playersCount:
+          type: integer
+          minimum: 0
+          maximum: 2
+        maxPlayers:
+          type: integer
+          enum:
+          - 2
+        createdAt:
+          type: string
+          format: date-time
+    RoomResponse:
+      type: object
+      required:
+      - room
+      - invitePath
+      properties:
+        room:
+          $ref: '#/components/schemas/Room'
+        invitePath:
+          type: string
+          description: Ścieżka zaproszenia do przyszłego interfejsu aplikacji
+          example: /join/2CD138
+    Error:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          example: Room not found
