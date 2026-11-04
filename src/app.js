@@ -22,6 +22,16 @@ app.use((req, res) => {
     res.status(404).json({ error: 'Not found' });
 });
 
+app.use((error, req, res, next) => {
+    if (error.type === 'entity.parse.failed') {
+        return res.status(400).json({
+            error: 'Invalid JSON'
+        });
+    }
+
+    next(error);
+});
+
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Serwer działa: http://localhost:${PORT}`);
