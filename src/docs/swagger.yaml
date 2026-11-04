@@ -106,7 +106,6 @@ paths:
           description: Nie znaleziono pokoju
         '409':
           description: Pokój nie jest w stanie waiting; gotowość nie została zmieniona
-          
   /rooms/{code}/leave:
     post:
       summary: Opuszcza pokój
