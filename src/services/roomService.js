@@ -52,11 +52,15 @@ if (Array.from(trimmedNickname).length > 20) {
     throw new Error('Nickname must contain at most 20 characters');
 }
 
+const slot = [1, 2].find(
+    number => !room.players.some(player => player.slot === number)
+);
+
 const nickname = trimmedNickname || `Player ${room.players.length + 1}`;    const player = {
         id: randomBytes(8).toString('hex'),
         nickname: nickname,
         isReady: false,
-        slot: room.players.length + 1
+        slot: slot
     };
 
     room.players.push(player);
@@ -70,6 +74,11 @@ export const togglePlayerReady = (code, playerId) => {
     const player = room.players.find(p => p.id === playerId);
     if (!player) throw new Error('Invalid playerId');
 
+    if (room.status !== 'waiting') {
+    const error = new Error('Readiness can only be changed in a waiting room');
+    error.statusCode = 409;
+    throw error;
+}
     player.isReady = !player.isReady;
 
     const allReady = room.players.length === room.maxPlayers && room.players.every(p => p.isReady);

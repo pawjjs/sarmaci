@@ -74,6 +74,7 @@ paths:
   /rooms/{code}/ready:
     post:
       summary: Zmienia status gotowości gracza
+      description: Przełącza gotowość tylko w oczekującym pokoju. Gdy obaj gracze są gotowi, gra rozpoczyna się automatycznie. Kolejne próby zmiany gotowości są odrzucane.
       parameters:
         - in: path
           name: code
@@ -103,6 +104,8 @@ paths:
           description: Brak lub niepoprawna treść żądania albo niepoprawny format playerId
         '404':
           description: Nie znaleziono pokoju
+        '409':
+          description: Pokój nie jest w stanie waiting; gotowość nie została zmieniona
           
   /rooms/{code}/leave:
     post:

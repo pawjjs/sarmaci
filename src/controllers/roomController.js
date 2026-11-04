@@ -70,7 +70,8 @@ export const readyRoom = (req, res) => {
 
         res.json(result);
     } catch (error) {
-        const status = error.message === 'Room not found' ? 404 : 403;
+        const status = error.statusCode
+    ?? (error.message === 'Room not found' ? 404 : 403);
         res.status(status).json({ error: error.message });
     }
 };
