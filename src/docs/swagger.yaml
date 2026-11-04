@@ -53,6 +53,7 @@ paths:
           schema:
             type: string
       requestBody:
+        required: false
         content:
           application/json:
             schema:
@@ -60,12 +61,13 @@ paths:
               properties:
                 nickname:
                   type: string
-                  example: "Player 1"
+                  description: Nick po usunięciu skrajnych spacji może mieć maksymalnie 20 znaków. Brak lub pusty nick powoduje nadanie automatycznej nazwy.
+                  example: "Jan"
       responses:
         '200':
           description: Pomyślnie dołączono
         '400':
-          description: Pokój pełny lub gra wystartowała
+          description: Niepoprawne dane żądania, nick inny niż tekst, nick dłuższy niż 20 znaków po przycięciu, pełny pokój lub rozpoczęta gra
         '404':
           description: Nie znaleziono pokoju
 
@@ -84,15 +86,24 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - playerId
               properties:
                 playerId:
                   type: string
+                  pattern: '^[a-f0-9]{16}$'
+                  description: Identyfikator otrzymany przy dołączeniu do pokoju
+                  example: "0123456789abcdef"
       responses:
         '200':
           description: Zmieniono status gotowości
         '403':
-          description: Złe ID gracza
-
+          description: Gracz o podanym identyfikatorze nie należy do pokoju
+        '400':
+          description: Brak lub niepoprawna treść żądania albo niepoprawny format playerId
+        '404':
+          description: Nie znaleziono pokoju
+          
   /rooms/{code}/leave:
     post:
       summary: Opuszcza pokój
@@ -108,9 +119,18 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - playerId
               properties:
                 playerId:
                   type: string
+                  pattern: '^[a-f0-9]{16}$'
+                  description: Identyfikator otrzymany przy dołączeniu do pokoju
+                  example: "0123456789abcdef"
       responses:
         '200':
           description: Gracz opuścił pokój pomyślnie
+        '400':
+          description: Brak lub niepoprawna treść żądania albo niepoprawny format playerId
+        '404':
+          description: Nie znaleziono pokoju

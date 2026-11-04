@@ -42,8 +42,17 @@ export const joinPlayerToRoom = (code, rawNickname) => {
     if (room.status !== 'waiting') throw new Error('Game already in progress or finished');
     if (room.players.length >= room.maxPlayers) throw new Error('Room is full');
 
-    const nickname = (rawNickname || '').trim() || `Player ${room.players.length + 1}`;
-    const player = {
+if (rawNickname !== undefined && typeof rawNickname !== 'string') {
+    throw new Error('Nickname must be a string');
+}
+
+const trimmedNickname = (rawNickname ?? '').trim();
+
+if (Array.from(trimmedNickname).length > 20) {
+    throw new Error('Nickname must contain at most 20 characters');
+}
+
+const nickname = trimmedNickname || `Player ${room.players.length + 1}`;    const player = {
         id: randomBytes(8).toString('hex'),
         nickname: nickname,
         isReady: false,
