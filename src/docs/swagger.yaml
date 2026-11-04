@@ -1,0 +1,116 @@
+openapi: 3.0.0
+info:
+  title: Balatro Clone API
+  description: API for managing game rooms and match state
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Local development server
+
+paths:
+  /health:
+    get:
+      summary: Sprawdza status serwera
+      responses:
+        '200':
+          description: Serwer działa
+
+  /rooms:
+    get:
+      summary: Pobiera listę publicznych pokoi
+      responses:
+        '200':
+          description: Lista pokoi
+    post:
+      summary: Tworzy nowy pokój do gry
+      responses:
+        '201':
+          description: Pokój utworzony pomyślnie
+
+  /rooms/{code}:
+    get:
+      summary: Pobiera szczegóły konkretnego pokoju
+      parameters:
+        - in: path
+          name: code
+          required: true
+          schema:
+            type: string
+          description: Sześciostanowy kod pokoju
+      responses:
+        '200':
+          description: Zwraca obiekt pokoju
+        '404':
+          description: Nie znaleziono pokoju
+
+  /rooms/{code}/join:
+    post:
+      summary: Dołącza gracza do pokoju
+      parameters:
+        - in: path
+          name: code
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nickname:
+                  type: string
+                  example: "Player 1"
+      responses:
+        '200':
+          description: Pomyślnie dołączono
+        '400':
+          description: Pokój pełny lub gra wystartowała
+        '404':
+          description: Nie znaleziono pokoju
+
+  /rooms/{code}/ready:
+    post:
+      summary: Zmienia status gotowości gracza
+      parameters:
+        - in: path
+          name: code
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                playerId:
+                  type: string
+      responses:
+        '200':
+          description: Zmieniono status gotowości
+        '403':
+          description: Złe ID gracza
+
+  /rooms/{code}/leave:
+    post:
+      summary: Opuszcza pokój
+      parameters:
+        - in: path
+          name: code
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                playerId:
+                  type: string
+      responses:
+        '200':
+          description: Gracz opuścił pokój pomyślnie
