@@ -1,0 +1,138 @@
+openapi: 3.0.0
+info:
+  title: Balatro Clone API
+  description: API for managing game rooms and match state
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Local development server
+
+paths:
+  /health:
+    get:
+      summary: Sprawdza status serwera
+      responses:
+        '200':
+          description: Serwer działa
+
+  /rooms:
+    get:
+      summary: Pobiera listę publicznych pokoi
+      responses:
+        '200':
+          description: Lista pokoi
+    post:
+      summary: Tworzy nowy pokój do gry
+      responses:
+        '201':
+          description: Pokój utworzony pomyślnie
+
+  /rooms/{code}:
+    get:
+      summary: Pobiera szczegóły konkretnego pokoju
+      parameters:
+        - in: path
+          name: code
+          required: true
+          schema:
+            type: string
+          description: Sześciostanowy kod pokoju
+      responses:
+        '200':
+          description: Zwraca obiekt pokoju
+        '404':
+          description: Nie znaleziono pokoju
+
+  /rooms/{code}/join:
+    post:
+      summary: Dołącza gracza do pokoju
+      parameters:
+        - in: path
+          name: code
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nickname:
+                  type: string
+                  description: Nick po usunięciu skrajnych spacji może mieć maksymalnie 20 znaków. Brak lub pusty nick powoduje nadanie automatycznej nazwy.
+                  example: "Jan"
+      responses:
+        '200':
+          description: Pomyślnie dołączono
+        '400':
+          description: Niepoprawne dane żądania, nick inny niż tekst, nick dłuższy niż 20 znaków po przycięciu, pełny pokój lub rozpoczęta gra
+        '404':
+          description: Nie znaleziono pokoju
+
+  /rooms/{code}/ready:
+    post:
+      summary: Zmienia status gotowości gracza
+      description: Przełącza gotowość tylko w oczekującym pokoju. Gdy obaj gracze są gotowi, gra rozpoczyna się automatycznie. Kolejne próby zmiany gotowości są odrzucane.
+      parameters:
+        - in: path
+          name: code
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - playerId
+              properties:
+                playerId:
+                  type: string
+                  pattern: '^[a-f0-9]{16}$'
+                  description: Identyfikator otrzymany przy dołączeniu do pokoju
+                  example: "0123456789abcdef"
+      responses:
+        '200':
+          description: Zmieniono status gotowości
+        '403':
+          description: Gracz o podanym identyfikatorze nie należy do pokoju
+        '400':
+          description: Brak lub niepoprawna treść żądania albo niepoprawny format playerId
+        '404':
+          description: Nie znaleziono pokoju
+        '409':
+          description: Pokój nie jest w stanie waiting; gotowość nie została zmieniona
+  /rooms/{code}/leave:
+    post:
+      summary: Opuszcza pokój
+      parameters:
+        - in: path
+          name: code
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - playerId
+              properties:
+                playerId:
+                  type: string
+                  pattern: '^[a-f0-9]{16}$'
+                  description: Identyfikator otrzymany przy dołączeniu do pokoju
+                  example: "0123456789abcdef"
+      responses:
+        '200':
+          description: Gracz opuścił pokój pomyślnie
+        '400':
+          description: Brak lub niepoprawna treść żądania albo niepoprawny format playerId
+        '404':
+          description: Nie znaleziono pokoju
