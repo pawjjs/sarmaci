@@ -4,7 +4,11 @@
   "description": "Temat - Gra typu Balatro",
   "main": "index.js",
   "scripts": {
+<<<<<<< HEAD
     "dev": "node --watch src/app.js"
+=======
+    "dev": "node --watch app.js"
+>>>>>>> main
   },
   "repository": {
     "type": "git",
@@ -18,8 +22,12 @@
   "homepage": "https://github.com/pawjjs/sarmaci#readme",
   "dependencies": {
     "cors": "^2.8.6",
+<<<<<<< HEAD
     "express": "^5.3.0",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
+=======
+    "express": "^5.3.0"
+>>>>>>> main
   }
 }
