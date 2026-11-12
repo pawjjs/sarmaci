@@ -1,8 +1,10 @@
+import { createServer } from 'node:http';
 import express from 'express';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import roomRoutes from './routes/roomRoutes.js';
+import { setupWebSocket } from './websocket.js';
 
 const app = express();
 const swaggerDocument = YAML.load('./src/docs/swagger.yaml');
@@ -22,8 +24,21 @@ app.use((req, res) => {
     res.status(404).json({ error: 'Not found' });
 });
 
+app.use((error, req, res, next) => {
+    if (error.type === 'entity.parse.failed') {
+        return res.status(400).json({
+            error: 'Invalid JSON'
+        });
+    }
+
+    next(error);
+});
+
 const PORT = 3000;
-app.listen(PORT, () => {
+const server = createServer(app);
+setupWebSocket(server);
+
+server.listen(PORT, () => {
     console.log(`Serwer działa: http://localhost:${PORT}`);
     console.log(`Dokumentacja Swagger: http://localhost:${PORT}/api-docs`);
 });
