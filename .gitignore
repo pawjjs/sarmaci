@@ -10,4 +10,15 @@
 /dataSources.local.xml
 node_modules/
 .idea/
+/src/db/
 
+# Lokalne bazy SQLite
+*.db
+# Pliki pomocnicze SQLite
+*.db-wal
+*.db-shm
+*.db-journal
+#
+Alternatywne rozszerzenia
+*.sqlite
+*.sqlite3

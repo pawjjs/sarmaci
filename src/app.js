@@ -5,9 +5,25 @@ import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import roomRoutes from './routes/roomRoutes.js';
 import { setupWebSocket } from './websocket.js';
+import { DatabaseSync } from 'node:sqlite';
+
+const db = new DatabaseSync('./db/User.db'); 
+
+db.exec(`
+CREATE TABLE IF NOT EXISTS User (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+name TEXT NOT NULL,
+mail TEXT NOT NULL UNIQUE,
+password TEXT NOT NULL
+);
+
+INSERT OR IGNORE INTO User (name, mail, password)
+VALUES ('admin', 'admin@example.com', 'admin123');
+
+`);
 
 const app = express();
-const swaggerDocument = YAML.load('./src/docs/swagger.yaml');
+const swaggerDocument = YAML.load('./docs/swagger.yaml');
 
 app.use(cors());
 app.use(express.json());
