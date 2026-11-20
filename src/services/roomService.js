@@ -48,13 +48,17 @@ if (rawNickname !== undefined && typeof rawNickname !== 'string') {
 
 const trimmedNickname = (rawNickname ?? '').trim();
 
-if (Array.from(trimmedNickname).length > 20) {
+if (trimmedNickname.length > 20) {
     throw new Error('Nickname must contain at most 20 characters');
 }
 
-const slot = [1, 2].find(
-    number => !room.players.some(player => player.slot === number)
-);
+let slot;
+
+if (room.players.length === 0) {
+    slot = 1;
+} else {
+    slot = 2;
+}
 
 const nickname = trimmedNickname || `Player ${room.players.length + 1}`;    const player = {
         id: randomBytes(8).toString('hex'),
