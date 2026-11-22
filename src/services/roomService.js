@@ -52,12 +52,12 @@ if (trimmedNickname.length > 20) {
     throw new Error('Nickname must contain at most 20 characters');
 }
 
-let slot;
+let slot = 1;
 
-if (room.players.length === 0) {
-    slot = 1;
-} else {
-    slot = 2;
+for (const player of room.players) {
+    if (player.slot === 1) {
+        slot = 2;
+    }
 }
 
 const nickname = trimmedNickname || `Player ${room.players.length + 1}`;    const player = {
