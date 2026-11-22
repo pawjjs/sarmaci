@@ -1,0 +1,6 @@
+CREATE TABLE decks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    code TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    description TEXT
+);

@@ -10,7 +10,6 @@
 /dataSources.local.xml
 node_modules/
 .idea/
-/src/db/
 
 # Lokalne bazy SQLite
 *.db
@@ -18,7 +17,6 @@ node_modules/
 *.db-wal
 *.db-shm
 *.db-journal
-#
-Alternatywne rozszerzenia
+#Alternatywne rozszerzenia
 *.sqlite
 *.sqlite3

@@ -1,8 +1,10 @@
+
 openapi: 3.0.0
 info:
   title: Balatro Clone API
   description: API for managing game rooms and match state
   version: 1.0.0
+
 servers:
   - url: http://localhost:3000/api
     description: Local development server
@@ -106,6 +108,7 @@ paths:
           description: Nie znaleziono pokoju
         '409':
           description: Pokój nie jest w stanie waiting; gotowość nie została zmieniona
+
   /rooms/{code}/leave:
     post:
       summary: Opuszcza pokój
@@ -136,3 +139,96 @@ paths:
           description: Brak lub niepoprawna treść żądania albo niepoprawny format playerId
         '404':
           description: Nie znaleziono pokoju
+
+  /decks:
+    get:
+      summary: Pobiera wszystkie talie
+      responses:
+        '200':
+          description: Lista talii
+
+    post:
+      summary: Dodaje nową talię
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - code
+                - name
+                - description
+              properties:
+                code:
+                  type: string
+                  example: basic
+                name:
+                  type: string
+                  example: Podstawowa
+                description:
+                  type: string
+                  example: Podstawowa talia dostępna w grze.
+      responses:
+        '201':
+          description: Talia została dodana
+
+  /decks/{id}:
+    get:
+      summary: Pobiera talię o podanym ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Znaleziono talię
+        '404':
+          description: Nie znaleziono talii
+
+    patch:
+      summary: Aktualizuje dane talii
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - code
+                - name
+                - description
+              properties:
+                code:
+                  type: string
+                name:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '200':
+          description: Talia została zaktualizowana
+        '404':
+          description: Nie znaleziono talii
+
+    delete:
+      summary: Usuwa talię
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Talia została usunięta
+        '404':
+          description: Nie znaleziono talii
